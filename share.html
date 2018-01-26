@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<script src='http://res.wx.qq.com/open/js/jweixin-1.1.0.js'></script>
+		<script>
+			var module_inits = [];
+
+			function load_init_modules() {
+				for(var i = 0; i < module_inits.length; i++) {
+					module_inits[i]();
+				}
+			}
+
+			function call_me(fun) {
+				module_inits.push(fun);
+			}
+
+			var ua = navigator.userAgent.toLowerCase();
+
+			if(ua.match(/MicroMessenger/i) == 'micromessenger') {
+				wx.ready(load_init_modules);
+			} else {
+				onload = load_init_modules;
+			}
+		</script>
+		<script>
+			function init_viewport() {
+				if(/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+					var version = parseFloat(RegExp.$1);
+
+					if(version > 2.3) {
+						var width = window.outerWidth == 0 ? window.screen.width : window.outerWidth;
+						var phoneScale = parseInt(width) / 500;
+						document.write('<meta name="viewport" content="width=500, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+					} else {
+						document.write('<meta name="viewport" content="width=500, target-densitydpi=device-dpi">');
+					}
+				} else if(navigator.userAgent.indexOf('iPhone') != -1) {
+					var phoneScale = parseInt(window.screen.width) / 500;
+					document.write('<meta name="viewport" content="width=500; height=750; initial-scale=' + phoneScale + '; user-scalable=no" /> '); //0.75   0.82
+				} else {
+					document.write('<meta name="viewport" content="width=500, height=750,initial-scale=0.64" /> '); //0.75   0.82
+
+				}
+			}
+			init_viewport();
+		</script>
+		<div id='newbtn' onclick='newclick()'>创建自己的匿名留言板</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jsapi.js" ></script>
+		<script src='http://res.wx.qq.com/open/js/jweixin-1.0.0.js'></script>
+		<script>
+			initWX();
+		</script>
+		<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1564ebedfba0ce4fb4c33cf8511c4b97";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+		<script type="text/javascript">
+			function wx_share_init() {
+				wx.onMenuShareAppMessage({
+					title: '在这匿名对我说句话吧！',
+					desc: '我希望，这是你的真心话~',
+					link: 'http://test.souho.net/redirect.php?book='+book,
+					imgUrl: imgurl,
+					type: 'link',
+					success: function() {
+
+					},
+					cancel: function() {}
+				});
+
+				wx.onMenuShareTimeline({
+					title: '在这匿名对我说句话吧！',
+					link: 'http://test.souho.net/redirect.php?book='+book,
+					imgUrl: imgurl,
+					success: function() {
+
+
+					},
+					cancel: function() {}
+				});
+			}
+
+			call_me(wx_share_init);
+		</script>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+
+	<body>
+		<img id='img'>
+		<img id='imgbk' src='img/bkb.png'>
+
+		<div class='content'>
+			<div class='visible'>
+				<ul>
+					<li>Hello, Anonymity!</li>
+					<li>你好，匿名者</li>
+				</ul>
+			</div>
+		</div>
+		<div class="snow-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100001;"></div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/canvas.js"></script>
+
+		<div id='middle'>
+		</div>
+		<div id='bottom'>
+			<div id='topic'>
+				<ul>
+					<li>#说说我们之间的小故事#</li>
+					<li>#我们第一次见面是怎样的#</li>
+					<li>#要不表个白？#</li>
+					<li>#吐槽#</li>
+				</ul>
+			</div>
+			<input id='inputtxt' type='text' maxlength=50 placeholder="">
+			<div id='inputbtn'>确定</div>
+			<div id='txtcontain'>
+				<div id='txt0' class='txt' onclick='txtchoice(0)'>你真的超有正义感</div>
+				<div id='txt1' class='txt' onclick='txtchoice(1)'>老实说你的脾气太暴躁</div>
+				<div id='txt2' class='txt' onclick='txtchoice(2)'>晚上能早点睡觉么...</div>
+				<div id='txt3' class='txt' onclick='txtchoice(3)'>我喜欢你</div>
+			</div>
+			<div id='change'>换一批</div>
+		</div>
+		<script>
+			var e_music_url = 'bg/Paragon.mp3';
+			var e_music_player = new Audio();
+
+			if(typeof(objid) == 'undefined') {
+				var objid = function(id) {
+					return document.getElementById(id);
+				}
+			}
+
+			function play_music() {
+				if(e_music_url == '') {
+					return;
+				}
+
+				e_music_player.src = e_music_url;
+				e_music_player.loop = 'loop';
+				e_music_player.play();
+
+				if(objid('sound_image')) {
+					objid('sound_image').style.webkitAnimation = "zhuan 1s linear infinite";
+				}
+
+			}
+
+			function create_music() {
+				if(e_music_url == '') {
+					return;
+				}
+
+				play_music();
+
+				sound_div = document.createElement("div");
+				sound_div.setAttribute("ID", "cardsound");
+				sound_div.style.cssText = "position:fixed;right:20px;top:26px;z-index:50;visibility:visible;";
+				sound_div.onclick = switchsound;
+
+				bg_htm = "<img id='sound_image' src='img/music_note_big.png' style='-webkit-animation:zhuan 1s linear infinite;width:36px;'>";
+				txt_htm = "<div id='music_txt' style='color:white;position:absolute;left:-40px;top:30px;width:60px'></div>"
+
+				sound_div.innerHTML = bg_htm + txt_htm;
+
+				document.body.appendChild(sound_div);
+			}
+
+			function switchsound() {
+				au = e_music_player;
+				ai = objid('sound_image');
+				if(au.paused) {
+					au.play();
+					ai.style.webkitAnimation = "zhuan 1s linear infinite";
+					objid("music_txt").innerHTML = "打开";
+					objid("music_txt").style.visibility = "visible";
+					setTimeout(function() {
+						objid("music_txt").style.visibility = "hidden"
+					}, 2500);
+				} else {
+					au.pause();
+					ai.style.webkitAnimation = "";
+					objid("music_txt").innerHTML = "关闭";
+					objid("music_txt").style.visibility = "visible";
+					setTimeout(function() {
+						objid("music_txt").style.visibility = "hidden"
+					}, 2500);
+				}
+			}
+			create_music();
+		</script>
+		<script>
+			var txt=[];
+			var openid = openid;
+			var book = book;
+			var newurl = 'http://test.souho.net/redirect.php';
+			var title = '你对'+nickname+'有什么话要说？';
+			var imgurl = imgurl;
+            
+            $.ajax({
+            	type:"post",
+            	url:"gettxt.php",
+            	dataType: 'json',
+				data: 'book=' + book + '&openid=' + openid,
+				success:function(data){
+					txt = data;
+				},
+				error:function(){
+					console.log(data);
+					alert("error 0");
+				}
+            });
+            
+			var txt_give = Array(
+				Array('你真的超正义感', '老实说你的脾气太暴躁了', '晚上能早点睡觉么...', '我喜欢你'),
+				Array('你挺自大的', '我摔倒了要你亲亲才能起来', '祝愿你每天开开心心我的朋友'),
+				Array('谢谢你', '请收下我的膝盖！超级崇拜你！', '别堕落了快来学习！')
+			);
+			var give = 0;
+			var headlen = 40 + 24;
+			var index = 0;
+			var compute = Array();
+			var inputold = '';
+
+			// ele_font_size = $('div').css('font-size');  
+			// ele_font_family = $('div').css('font-family'); 
+			// console.log(ele_font_size + ele_font_family);
+			$(document).ready(function() {
+				// console.log("hello".width( ele_font_size + " " + ele_font_family)); 
+				$('#inputtxt').focus(function() {
+					$('#topic').css('display', 'none');
+				});
+				$('#inputtxt').blur(function() {
+					var str = $('#inputtxt').val();
+					if('' == trim(str)) {
+						$('#topic').css('display', 'inline');
+					}
+				});
+
+				$('#inputbtn').click(function() {
+					var str = $('#inputtxt').val();
+					var in_flag = 0;
+					var in_id = 0;
+
+					str = trim(str);
+					if('' != str) {
+						for(var i = 0; i < txt.length; i++) {
+							if(str == txt[i]['txt']) {
+								in_id = txt[i]['id'];
+								in_flag = 1;
+								break;
+							}
+						}
+						if(in_flag == 1) {
+							if(str != inputold) {
+								$.ajax({
+									type: 'POST',
+									url: 'addlike.php',
+									dataType: 'json',
+									data: 'id=' + in_id + '&openid=' + openid + '&type=1',
+									success: function(data) {
+										addtxt(str, in_id);
+										inputold = str;
+										$('#inputtxt').val('');
+										$('#topic').css('display', 'inline');
+									},
+									error: function(data) {
+										alert("error 3");
+									}
+								});
+							} else {
+								addtxt(str, in_id);
+								$('#inputtxt').val('');
+								$('#topic').css('display', 'inline');
+							}
+						} else {
+							$.ajax({
+								type: 'POST',
+								url: 'addtxt.php',
+								dataType: 'json',
+								data: 'txt=' + str + '&book=' + book + '&openid=' + openid,
+								success: function(data) {
+									addtxt(str, data.txtid);
+									inputold = str;
+									$('#inputtxt').val('');
+									$('#topic').css('display', 'inline');
+								},
+								error: function(data) {
+									console.log(data);
+									alert("error 1");
+								}
+							});
+						}
+					}
+				});
+				$('#change').click(function() {
+					give++;
+					give = give % txt_give.length;
+					var str = '';
+					for(var i = 0; i < txt_give[give].length; i++) {
+						str = str + "<div id='txt" + i + "' class='txt' onclick='txtchoice(" + i + ")'>" + txt_give[give][i] + "</div>";
+					}
+					$('#txtcontain').html(str);
+					// console.log(give+' '+txt_give[give]);
+				});
+			});
+
+			function newclick() {
+				window.location.href = newurl;
+			}
+
+			function txtchoice(i) {
+				// console.log('lin');
+				$('#topic').css('display', 'none');
+				tmp = '#txt' + i;
+				var txt = $(tmp).html();
+				$('#inputtxt').val(txt);
+			}
+
+			function like(idx, id) {
+				var url = '';
+				$.ajax({
+					type: 'POST',
+					url: 'addlike.php',
+					dataType: 'json',
+					data: 'id=' + id + '&openid=' + openid + '&type=0',
+					success: function(data) {
+						var flag = data.flag;
+						var num = 0;
+						if(flag == 3) {
+							num = parseInt($('#d' + idx).find(".num").val()) + 1;
+						} else {
+							num = data.num;
+						}
+						var color = '';
+						var numcolor = '';
+						if(flag) {
+							// console.log(idx);
+							// 数据加
+							// console.log(txt);
+							var numtxt = "&nbsp;" + num + "&nbsp;&nbsp;";
+							if(num > 14) {
+								url = "img/redheart.png";
+								color = '#f46200';
+								numcolor = "#e7211a";
+							} else {
+								url = "img/pinkheart.png";
+								numcolor = "#dc778b";
+							}
+							var w1 = numtxt.width("20px arial, sans-serif");
+
+							$('#d' + idx).find(".heart").css('background-image', 'url(' + url + ')');
+							if(color != '') {
+								$('#d' + idx).find(".txtmid").css('color', color);
+							}
+
+							var w2 = parseInt($('#d' + idx).find(".num").css('width'));
+							var w = w1 - w2;
+							// console.log(w1+" "+w2+" "+w);
+
+							$('#d' + idx).find(".num").css('width', w2 + w);
+							$('#d' + idx).find(".num").css('color', numcolor);
+
+							var w2 = parseInt($('#d' + idx).css('width'));
+							$('#d' + idx).css('width', w2 + w);
+							var tmp = parseInt($('#d' + idx).find(".num").css('-webkit-transform').split(', ')[4]);
+							// console.log(tmp);
+							var temp = "matrix(1,0,0,1," + (tmp - w) + ",0)";
+							// console.log(temp);
+							$('#d' + idx).find(".num").css('-webkit-transform', temp);
+							$('#d' + idx).find(".num").html(numtxt);
+
+							// $('#text').css('top',parseInt($('#d'+idx).css('top')));
+							if($('#d' + idx).find(".text").length == 0) {
+								var div = document.createElement("div");
+								div.className = 'text text_active';
+								div.innerHTML = '+1';
+								objid('d' + idx).appendChild(div);
+
+								var div = document.createElement("div");
+
+								div.className = 'like like_active';
+
+								objid('d' + idx).appendChild(div);
+								$('.like').css('background-image', 'url(' + url + ')');
+							} else {
+								$('.like').css('background-image', 'url(' + url + ')');
+								$('#d' + idx).find(".text").addClass('text_active');
+								$('#d' + idx).find(".like").addClass('like_active');
+							}
+						} else {
+							// 数据减
+							url = "img/greyheart01.png";
+							numcolor = "#505050";
+							if(num > 14) {
+								var numtxt = "&nbsp;" + num + "&nbsp;&nbsp;";
+								color = '#f46200';
+							} else if(num) {
+								color = '#554236';
+								var numtxt = "&nbsp;" + num + "&nbsp;&nbsp;";
+							} else {
+								color = '#554236';
+								var numtxt = "&nbsp;&nbsp;";
+							}
+							var w1 = numtxt.width("20px arial, sans-serif");
+
+							$('#d' + idx).find(".heart").css('background-image', 'url(' + url + ')');
+							if(color != '') {
+								$('#d' + idx).find(".txtmid").css('color', color);
+							}
+
+							var w2 = parseInt($('#d' + idx).find(".num").css('width'));
+							var w = w1 - w2;
+							// console.log(w1+" "+w2+" "+w);
+
+							$('#d' + idx).find(".num").css('width', w2 + w);
+							$('#d' + idx).find(".num").css('color', numcolor);
+
+							var w2 = parseInt($('#d' + idx).css('width'));
+							$('#d' + idx).css('width', w2 + w);
+							var tmp = parseInt($('#d' + idx).find(".num").css('-webkit-transform').split(', ')[4]);
+							// console.log(tmp);
+							var temp = "matrix(1,0,0,1," + (tmp - w) + ",0)";
+							// console.log(temp);
+							$('#d' + idx).find(".num").css('-webkit-transform', temp);
+							$('#d' + idx).find(".num").html(numtxt);
+
+							if($('#d' + idx).find(".text").length != 0) {
+								$('#d' + idx).find(".text").removeClass('text_active');
+								$('#d' + idx).find(".like").removeClass('like_active');
+							}
+
+						}
+
+						txt[idx]['num'] = num;
+						txt[idx]['flag'] = flag;
+
+						// console.log(data.num+" "+data.flag);
+					}.bind(this),
+					error: function(data) {
+						alert("error 2");
+					}
+				});
+			}
+
+			window.onload = function() {
+				document.title = title;
+				document.getElementById('img').src = imgurl;
+				setTimeout("count()", 2000);
+				var canvas = document.getElementsByTagName('canvas');
+				$('body').css('height',canvas[0].height);
+			}
+
+			var style = document.createElement('style');
+			style.type = 'text/css';
+			style.innerHTML = '';
+			document.getElementsByTagName('head')[0].appendChild(style);
+
+			function count() {　
+				if(txt.length == 0) {
+					return;
+				}
+				var url = '';
+				var div = document.createElement("div");
+				div.id = 'd' + index;
+				div.className = 'txtcontain';
+				var len = txt[index]['txt'].width("20px arial, sans-serif");
+				var num = txt[index]['num'];
+				var color = "";
+				var numcolor = "";
+				if(num == 0) {
+					var numtxt = "&nbsp;&nbsp;";
+					// url = "img/greyheart01.png";
+				} else {
+					var numtxt = "&nbsp;" + num + "&nbsp;&nbsp;";
+					if(num > 14) {
+						color = 'color:#f46200;';
+					}
+				}
+
+				if(txt[index]['flag'] == 1) {
+					if(color == "") {
+						url = "img/pinkheart.png";
+						numcolor = "#dc778b";
+					} else {
+						url = "img/redheart.png";
+						numcolor = "#e7211a";
+					}
+				} else {
+					url = "img/greyheart01.png";
+					numcolor = "#505050";
+				}
+				val = numtxt.width("20px arial, sans-serif");
+				div.innerHTML = "<div class='txtfirst'></div><div class='heart' style='background-image:url(" + url + ");'></div><div class='num' style='-webkit-transform: translate(-" + (len + val + 1) + "px, 0);width:" + val + ";color:" + numcolor + ";'>" + numtxt + "</div><div class='txtmid' style='-webkit-transform: translate(-" + (len + 2) + "px, 0);" + color + "'>" + txt[index]['txt'] + "</div><div class='txtafter'></div>";
+				div.style.width = len + headlen + val + "px";
+				div.style.webkitAnimation = 'run' + index + ' 8s linear forwards'; //forwards
+				var top = gettop(len, val);
+				// console.log(top);
+				if(top != undefined) {
+					console.log(top);
+					div.style.top = top + 'px';
+					div.style.left = 0 + 'px';
+					// div.onclick = "like("+index+","+txt[index]['id']+")";
+					div.setAttribute("onclick", "like(" + index + "," + txt[index]['id'] + ")");
+					var rule = "@-webkit-keyframes run" + index + "{0% {transform:translateX(500px);-webkit-transform:translateX(500px);}\n" +
+						"100%{transform:translateX(-" + (len + headlen + val + 48) + "px);-webkit-transform:translateX(-" + (len + headlen + val + 48) + "px);}}";
+					this.stylesheet = document.styleSheets[document.styleSheets.length - 1];
+
+					try {
+						this.stylesheet.insertRule(rule, this.stylesheet.rules.length);
+					} catch(e) {
+						console.log(index);
+					};
+					// div.addEventListener('webkitAnimationEnd', function () {                                       
+					//   // console.log(div.id);
+					//   // objid('middle').removeChild(objid(div.id));
+					//   // console.log(compute);
+					//   compute.splice(0,1);
+					// }, false);
+
+					setTimeout(function() {
+						objid('middle').removeChild(objid(div.id));
+						compute.splice(0, 1);
+					}, 8500);
+
+					objid('middle').appendChild(div);
+
+					index++;
+				}
+				// else
+				// {
+				//   console.log("get top error");
+				// }
+				if(index < txt.length) {
+					timeoutID = setTimeout("count()", 1000);
+				} else {
+					// console.log(txt);
+					// txt.sort(function(){ return 0.5 - Math.random() });
+					// console.log(txt);
+					timeoutID = setTimeout(function() {
+						index = 0;
+						count();
+					}, 9000);
+				}
+			}
+
+			function addtxt(str, id) {
+				var div = document.createElement("div");
+				div.id = 'd' + index;
+				div.className = 'txtcontain';
+				len = str.width("20px arial, sans-serif");
+				var numtxt = "&nbsp;&nbsp;";
+				val = numtxt.width("20px arial, sans-serif");
+				div.innerHTML = "<div class='txtfirst'></div><div class='heart'></div><div class='heart'></div><div class='num' style='-webkit-transform: translate(-" + (len + val + 1) + "px, 0);width:" + val + ";'>" + numtxt + "</div><div class='txtmid' style='-webkit-transform: translate(-" + (len + 2) + "px, 0);color:#B54434;'>" + str + "</div><div class='txtafter'></div>";
+				// div.innerHTML = "<div class='txtfirst'></div><div class='txtmid' style='color:#F3F39B;'>"+str+"</div><div class='heart'></div><div class='txtafter'></div>";
+
+				// console.log(len);
+				div.style.width = len + headlen + val + "px";
+				div.style.webkitAnimation = 'run' + index + ' 8s linear forwards'; //forwards infinite
+				var top = gettop(len, val);
+				// console.log(top);
+				if(top != undefined) {
+					// console.log(top);
+					div.style.top = top + 'px';
+					div.style.left = 0 + 'px';
+					div.setAttribute("onclick", "like(" + index + "," + id + ")");
+
+					var rule = "@-webkit-keyframes run" + index + "{0% {transform:translateX(500px);-webkit-transform:translateX(500px);}\n" +
+						"100%{transform:translateX(-" + (len + headlen + val + 48) + "px);-webkit-transform:translateX(-" + (len + headlen + val + 48) + "px);}}";
+					this.stylesheet = document.styleSheets[document.styleSheets.length - 1];
+
+					try {
+						this.stylesheet.insertRule(rule, this.stylesheet.rules.length);
+					} catch(e) {
+						console.log(index);
+					};
+					// div.addEventListener('webkitAnimationEnd', function () {
+					//   // console.log(div.id);
+					//   // objid('middle').removeChild(objid(div.id));
+					//   // console.log(compute);
+					//   compute.splice(0,1);
+					// }, false);
+
+					setTimeout(function() {
+						objid('middle').removeChild(objid(div.id));
+						compute.splice(0, 1);
+					}, 8500);
+
+					objid('middle').appendChild(div);
+					var tmp = {
+						"id": id,
+						"num": 0,
+						"txt": str,
+						"flag": 0
+					};
+					txt.push(tmp);
+					for(var i = txt.length - 1; i > index; i--) {
+						txt[i] = txt[i - 1];
+					}
+					txt[index] = tmp;
+					index++;
+
+					if(txt.length == 1) {
+						timeoutID = setTimeout(function() {
+							index = 0;
+							count();
+						}, 9000);
+					}
+				} else {
+					timeoutID = setTimeout(addtxt(str, id), 1000);
+				}
+			}
+
+			function gettop(len, val) {
+				var save = Array();
+				var top1 = Math.floor(Math.random() * (500 - 50) + 75);
+				// console.log(top);
+				// console.log(compute);
+				var topflag = 0;
+				var sflag = 0;
+				for(var i = 0; i < compute.length; i++) {
+					tmp = compute[i]['top'];
+					// console.log(tmp);
+					if((top1 < tmp && top1 + 50 > tmp) || (top1 > tmp && top1 - 50 < tmp)) {
+						topflag = 1;
+						break;
+					}
+				}
+				var time1 = new Date().getTime();
+				if(topflag == 0) {
+					save['top'] = top1;
+					save['width'] = len + headlen + val + 48;
+					save['time'] = time1;
+					compute.push(save);
+					return top1;
+				} else {
+					// console.log(compute.length);
+					// s2 = (500 + len + 48+val + 48)/8000;
+					// t2 = 500/s2;
+					// for (var i = 0; i < compute.length; i++) {
+					//   var interval = time1 - compute[i]['time'];
+					//   var w = compute[i]['width'];
+					//   s1 = (w+500)/8000; //parseFloat()
+					//   s = 500 - s1*interval + w;
+					//   t1 = s/s1;
+					//   console.log(t1+' '+t2);
+					//   if (t1>t2) {
+					//     sflag = 1;
+					//     break;
+					//   }
+					// }
+
+					var w2 = len + headlen + val + 48;
+					// s2 = (500 + w2)/8000;
+					// t2 = 500/s2;
+					for(var i = 0; i < compute.length; i++) {
+						var interval = time1 - compute[i]['time'];
+						var w = compute[i]['width'];
+						var A = (500 + w) / 8000 * interval - w;
+						if(A > 0) {
+							if(w2 < w) {
+								sflag = 0;
+							} else {
+								var B = (w2 - w) / 8000; //速度之差
+								if(B == 0 || A / B > 500 * 8000 / (500 + w2)) {
+									sflag = 0;
+								} else {
+									sflag = 1;
+									break;
+								}
+							}
+						} else {
+							sflag = 1;
+							break;
+						}
+					}
+					if(sflag == 0) {
+						save['top'] = top1;
+						save['width'] = len + headlen + val + 48;
+						save['time'] = time1;
+						compute.push(save);
+						return top1;
+					}
+				}
+			}
+
+			String.prototype.width = function(font) {
+				var f = font || '12px arial';
+				o = $('<div>' + this + '</div>')
+					.css({
+						'position': 'absolute',
+						'float': 'left',
+						'white-space': 'nowrap',
+						'visibility': 'hidden',
+						'font': f
+					})
+					.appendTo($('body'));
+				w = o.width();
+				o.remove();
+				return w;
+			}
+
+			function objid(id) {
+				return document.getElementById(id);
+			}
+
+			function trim(str) {
+				return str.replace(/(^\s+)|(\s+$)/g, "");
+			}
+		</script>
+	</body>
+
+</html>
